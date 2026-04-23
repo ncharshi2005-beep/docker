@@ -1,0 +1,69 @@
+Experiment 17: Docker Volumes and Port Mapping
+Objective
+
+Understand:
+
+How data persistence works using Docker volumes
+How applications inside containers are exposed using port mapping
+1. Key Concepts
+Volume
+Persistent storage managed by Docker
+Stores data outside the container filesystem
+Port Mapping
+Exposes a container port to the host machine
+Persistence
+Ensures data survives even after container deletion
+Ephemeral Nature
+By default, containers lose all data when deleted
+Volumes solve this issue by preserving data externally
+2. Step-by-Step Implementation
+Step 1: Run Container with Port Mapping
+
+Pull and run an NGINX container:
+
+docker pull nginx
+docker run -d -p 8080:80 nginx
+-d → Run container in background
+-p 8080:80 → Map host port 8080 to container port 80
+
+Test:
+Open browser and visit:
+
+http://localhost:8080
+
+You should see the NGINX welcome page.
+
+Step 2: Create a Docker Volume
+docker volume create my-volume
+docker volume ls
+Step 3: Run Container with Volume Mapping
+docker run -d -p 8081:80 -v my-volume:/usr/share/nginx/html nginx
+-v my-volume:/usr/share/nginx/html → Mount volume to NGINX web directory
+Step 4: Test Data Persistence
+Create a file inside the container:
+docker exec -it <container_id> bash
+echo "Hello Persistent Storage!" > /usr/share/nginx/html/index.html
+exit
+Verify in browser:
+http://localhost:8081
+
+You should see:
+
+Hello Persistent Storage!
+Restart and Verify Persistence
+Stop and remove container:
+docker stop <container_id>
+docker rm <container_id>
+Run a new container using the same volume:
+docker run -d -p 8081:80 -v my-volume:/usr/share/nginx/html nginx
+
+Result:
+The same content appears because the data is stored in the volume, not in the container.
+
+3. Summary of Important Commands
+Command	Purpose
+docker volume create	Create a new volume
+docker volume ls	List all volumes
+docker run -p	Map host port to container port
+docker run -v	Attach volume to container
+docker inspect	View detailed container configuration
