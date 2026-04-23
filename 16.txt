@@ -1,0 +1,28 @@
+Experiment 16: Creating Docker Images using DockerfileThe objective of this lab is to understand what a Docker image is and learn how to create, build, and run a custom image using a Dockerfile.
+1. Key ConceptsDocker Image: A read-only template containing application code, runtime, libraries, and dependencies used to create containers.
+Dockerfile: A text file containing instructions that define how a Docker image is built. Each instruction creates a layer in the image.
+2. Lab Tasks
+Step 1: Create a Simple ApplicationCreate a folder named docker-app and navigate into it. 
+Create a file named app.py with the following webserver code:
+Python
+from http.server import SimpleHTTPRequestHandler, HTTPServer
+PORT = 5020
+class MyHandler(SimpleHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+        self.wfile.write(b"<h1>Hello from Docker Python Container</h1>")
+
+server = HTTPServer(("0.0.0.0", PORT), MyHandler)
+print(f"Server running on port {PORT}...")
+server.serve_forever()
+Step 2: Write the DockerfileIn the same folder, create a file named Dockerfile (no extension) and add these instructions:DockerfileFROM python:3.9-slim
+WORKDIR /app
+COPY app.py .
+EXPOSE 5020
+CMD ["python", "app.py"]
+Instruction Explanation: FROM: Sets the base image (Python 3.9).WORKDIR: Sets the working directory inside the container.COPY: Copies app.py from your host to the image.EXPOSE: Informs Docker that the container listens on port 5020.CMD: The default command to run when the container starts.Step 3: Build the Docker ImageRun the build command in your terminal. We will use the -t flag to tag (name) the image:DOSdocker build -t my-python-app .
+(Note: The . refers to the current directory containing the Dockerfile.)Step 4: Verify the ImageCheck if your image was created successfully:DOSdocker images
+You should see my-python-app in the list.Step 5: Run the ContainerSince your previous lab had a port conflict on 8080, let's map the host port 5020 to the container port 5020:DOSdocker run -p 5020:5020 my-python-app
+Verification: Open your browser and visit http://localhost:5020. You should see the message: "Hello from Docker Python Container".
