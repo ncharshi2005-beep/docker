@@ -1,0 +1,17 @@
+# Docker Lab
+
+## Installation and Verification
+1. **Install Docker:** Follow the instructions for your OS from the official Docker [installation guide](https://docs.docker.com/get-docker/).
+2. **Verify Installation:** Run `docker --version` in your terminal to check if Docker is installed correctly.
+
+## Basic Docker Commands
+- **Run a Container:** `docker run hello-world`
+- **List Running Containers:** `docker ps`
+- **List All Containers:** `docker ps -a`
+- **Remove a Container:** `docker rm <container_id>`
+- **View Logs:** `docker logs <container_id>`
+
+## Lab Tasks
+1. **Create a Docker Image:** Write a Dockerfile and build an image using `docker build -t <image_name> .`
+2. **Run Your Own App in a Container:** Use the image you created to run a container.
+3. **Push Your Image to Docker Hub:** Use `docker push <your_dockerhub_username>/<image_name>` to share your image.
